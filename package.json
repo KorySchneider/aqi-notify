@@ -1,0 +1,13 @@
+{
+  "name": "aqi-sms",
+  "version": "0.1.0",
+  "description": "SMS alerts for AQI",
+  "main": "index.js",
+  "repository": "https://github.com/koryschneider/aqi-sms",
+  "author": "Kory Schneider",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "textbelt": "^0.0.4"
+  }
+}
