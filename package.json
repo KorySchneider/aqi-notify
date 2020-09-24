@@ -8,6 +8,9 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "textbelt": "^0.0.4"
+    "dotenv": "^8.2.0",
+    "moment": "^2.29.0",
+    "node-fetch": "^2.6.1",
+    "nodemailer": "^6.4.11"
   }
 }
