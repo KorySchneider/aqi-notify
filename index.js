@@ -17,6 +17,7 @@ const {
   ZIP_CODE,
   AIR_NOW_API_KEY,
   LOG_LEVEL,
+  AQI_THRESHOLD,
 } = process.env;
 
 const AIR_NOW_URL = `https://www.airnowapi.org/aq/observation/zipCode/current/?format=application/json&API_KEY=${AIR_NOW_API_KEY}&zipCode=${ZIP_CODE}`;
@@ -59,13 +60,24 @@ async function main() {
   const aqiResponse = await fetch(AIR_NOW_URL);
   const aqiData = await aqiResponse.json();
   logger.info(`Received AQI data response: ${JSON.stringify(aqiData)}`);
-  if ('WebServiceError' in aqiData) process.exit(1);
+
+  if ('WebServiceError' in aqiData) {
+    logger.info('Exiting due to API error');
+    process.exit(1);
+  }
+
+  // Check AQI
+  const AQI = aqiData[0].AQI;
+  if (AQI < AQI_THRESHOLD) {
+    logger.debug('Exiting because AQI was below AQI_THRESHOLD');
+    process.exit(0);
+  }
 
   // Build message
   const time = moment(aqiData[0].HourObserved, 'HH').format('h:00 a');
-  const message = `The AQI is ${aqiData[0].AQI} as of ${time}`;
+  const message = `The AQI is ${AQI} as of ${time}`;
 
-  // Send text via email
+  // Send message
   const transporter = nodemailer.createTransport({
     host: SMTP_HOST,
     port: SMTP_PORT,
@@ -84,4 +96,4 @@ async function main() {
   logger.debug(`Message info: ${JSON.stringify(info)}`);
 }
 
-main().catch(logger.error);
+main().catch(err => logger.error(`Error in main(): ${err}`));
