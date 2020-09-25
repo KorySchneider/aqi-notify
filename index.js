@@ -18,6 +18,7 @@ const {
   AIR_NOW_API_KEY,
   LOG_LEVEL,
 } = process.env;
+logger.debug(`Environment variables: ${JSON.stringify(process.env)}`);
 
 const AIR_NOW_URL = `https://www.airnowapi.org/aq/observation/zipCode/current/?format=application/json&API_KEY=${AIR_NOW_API_KEY}&zipCode=${ZIP_CODE}`;
 
@@ -79,7 +80,7 @@ async function main() {
     text: message,
   });
   logger.info(`Message sent: "${message}"`);
-  logger.verbose(`Message info: ${JSON.stringify(info)}`);
+  logger.debug(`Message info: ${JSON.stringify(info)}`);
 }
 
 main().catch(logger.error);
