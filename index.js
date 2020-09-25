@@ -18,7 +18,6 @@ const {
   AIR_NOW_API_KEY,
   LOG_LEVEL,
 } = process.env;
-logger.debug(`Environment variables: ${JSON.stringify(process.env)}`);
 
 const AIR_NOW_URL = `https://www.airnowapi.org/aq/observation/zipCode/current/?format=application/json&API_KEY=${AIR_NOW_API_KEY}&zipCode=${ZIP_CODE}`;
 
@@ -53,12 +52,14 @@ const logger = createLogger({
   ],
 });
 
+logger.debug(`Environment variables: ${JSON.stringify(process.env)}`);
+
 async function main() {
   // Get AQI data
   const aqiResponse = await fetch(AIR_NOW_URL);
   const aqiData = await aqiResponse.json();
   logger.info(`Received AQI data response: ${JSON.stringify(aqiData)}`);
-  if (!aqiData) return;
+  if ('WebServiceError' in aqiData) process.exit(1);
 
   // Build message
   const time = moment(aqiData[0].HourObserved, 'HH').format('h:00 a');
