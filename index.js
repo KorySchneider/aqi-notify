@@ -17,6 +17,8 @@ const {
   AIR_NOW_API_KEY,
   LOG_LEVEL,
   AQI_THRESHOLD,
+  MIN_HOUR,
+  MAX_HOUR,
 } = process.env;
 
 const AIR_NOW_URL = `https://www.airnowapi.org/aq/observation/zipCode/current/?format=application/json&API_KEY=${AIR_NOW_API_KEY}&zipCode=${ZIP_CODE}`;
@@ -61,7 +63,7 @@ async function main() {
   logger.info(`Received AQI data response: ${JSON.stringify(aqiData)}`);
 
   if ('WebServiceError' in aqiData) {
-    logger.error(`Exiting due to API error: ${aqiData}`);
+    logger.error(`Exiting due to API error: ${JSON.stringify(aqiData)}`);
     process.exit(1);
   }
 
@@ -72,8 +74,15 @@ async function main() {
     process.exit(0);
   }
 
+  // Check time
+  let hour = aqiData[0].HourObserved;
+  if (hour <= MIN_HOUR || hour >= MAX_HOUR) {
+    logger.info('Exiting because hour is outside desired range');
+    process.exit(0);
+  }
+
   // Build message
-  const hour = aqiData[0].HourObserved + 1;
+  hour++;
   const time = hour > 12 ? `${hour - 12} pm` : `${hour} am`;
   const message = `The AQI is ${AQI} as of ${time}`;
   logger.info(`Message to send: "${message}"`);
