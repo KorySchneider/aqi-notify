@@ -61,14 +61,14 @@ async function main() {
   logger.info(`Received AQI data response: ${JSON.stringify(aqiData)}`);
 
   if ('WebServiceError' in aqiData) {
-    logger.info('Exiting due to API error');
+    logger.error(`Exiting due to API error: ${aqiData}`);
     process.exit(1);
   }
 
   // Check AQI
   const AQI = aqiData[0].AQI;
   if (AQI < AQI_THRESHOLD) {
-    logger.debug('Exiting because AQI was below AQI_THRESHOLD');
+    logger.info('Exiting because AQI was below AQI_THRESHOLD');
     process.exit(0);
   }
 
@@ -76,6 +76,7 @@ async function main() {
   const hour = aqiData[0].HourObserved + 1;
   const time = hour > 12 ? `${hour - 12} pm` : `${hour} am`;
   const message = `The AQI is ${AQI} as of ${time}`;
+  logger.info(`Message to send: "${message}"`);
 
   // Send message
   const transporter = nodemailer.createTransport({
@@ -92,7 +93,6 @@ async function main() {
     to: SEND_ADDR,
     text: message,
   });
-  logger.info(`Message sent: "${message}"`);
   logger.debug(`Message info: ${JSON.stringify(info)}`);
 }
 
