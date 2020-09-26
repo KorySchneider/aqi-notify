@@ -7,13 +7,44 @@ airnow.gov, based on zip code, and send the AQI and time to an email address
 ### Requirements:
 - SMTP server to send mail from (a gmail account will work)
 - A server to run this program on
-- Node.js v12 or newer
+  - with Node.js v12 or newer installed
 - (If you want SMS) your cell carrier's email-to-sms address
 
 ### Usage:
-- Create and configure a `.env` file in the root of the project.
-  See `.env.example` for required fields
-- Create a cron job to run the program at your desired rate/times. For example,
-  `15 0-2,13-23 * * * export $(grep -v '^#' /path/to/aqi-sms/.env | xargs) && /path/to/aqi-sms/index.js >/path/to/aqi-sms/cron.log 2>&1`.
-  This will load the environment variables from the `.env` file and run
-  `index.js` every hour from 7:15 to 20:15 PST, on a UTC server.
+1. Create and configure a `.env` file in the root of the project.
+   See below for an example file.
+2. Create a cron job to run the program every hour. For example:
+   ```
+   30 * * * * export $(grep -v '^#' /path/to/aqi-sms/.env | xargs) && /path/to/aqi-sms/index.js >/dev/null 2>&1
+   ```
+   This will load the environment variables from the `.env` file and run `index.js` every hour at 30 past.
+
+### Example `.env` file
+```env
+# Send notification only if AQI is greater than or equal to this threshold
+AQI_THRESHOLD=50
+
+# Send notification only if the hour of reported data is within these times
+# Hours are 00-23, both settings are inclusive
+MIN_HOUR=6
+MAX_HOUR=20
+
+# Location to check
+ZIP_CODE=12345
+
+# Address to send notification to
+SEND_ADDR=5551234567@text.your-carrier.com
+
+# SMTP credentials & configuration
+SMTP_USER=username
+SMTP_PASS=password
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=465
+SMTP_SECURE=true
+
+# API Key
+AIR_NOW_API_KEY=uuid
+
+# Log level, one of: debug, info, error
+LOG_LEVEL=info
+```
