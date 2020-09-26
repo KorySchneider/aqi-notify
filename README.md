@@ -11,9 +11,11 @@ airnow.gov, based on zip code, and send the AQI and time to an email address
 - (If you want SMS) your cell carrier's email-to-sms address
 
 ### Usage:
-1. Create and configure a `.env` file in the root of the project.
+1. Clone this repository
+2. Install dependencies: `cd aqi-notify && yarn`
+3. Create and configure a `.env` file in the root of the project.
    See below for an example file.
-2. Create a cron job to run the program every hour. For example:
+4. Create a cron job to run the program every hour. For example:
    ```
    30 * * * * export $(grep -v '^#' /path/to/aqi-notify/.env | xargs) && /path/to/aqi-notify/index.js >/dev/null 2>&1
    ```
