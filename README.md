@@ -1,4 +1,4 @@
-# aqi-sms
+# aqi-notify
 
 This is a simple program to fetch the current air quality index (AQI) from
 airnow.gov, based on zip code, and send the AQI and time to an email address
@@ -15,7 +15,7 @@ airnow.gov, based on zip code, and send the AQI and time to an email address
    See below for an example file.
 2. Create a cron job to run the program every hour. For example:
    ```
-   30 * * * * export $(grep -v '^#' /path/to/aqi-sms/.env | xargs) && /path/to/aqi-sms/index.js >/dev/null 2>&1
+   30 * * * * export $(grep -v '^#' /path/to/aqi-notify/.env | xargs) && /path/to/aqi-notify/index.js >/dev/null 2>&1
    ```
    This will load the environment variables from the `.env` file and run `index.js` every hour at 30 past.
 

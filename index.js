@@ -39,7 +39,7 @@ const logger = createLogger({
       `${timestamp} ${level.toUpperCase()}: ${message}\n`
     )),
   ),
-  defaultMeta: { service: 'aqi-sms' },
+  defaultMeta: { service: 'aqi-notify' },
   transports: [
     new transports.Console(),
     new transports.File({

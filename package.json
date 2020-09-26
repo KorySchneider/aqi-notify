@@ -1,9 +1,9 @@
 {
-  "name": "aqi-sms",
+  "name": "aqi-notify",
   "version": "0.1.0",
-  "description": "SMS alerts for AQI",
+  "description": "Notifications for Air Quality Index",
   "main": "index.js",
-  "repository": "https://github.com/koryschneider/aqi-sms",
+  "repository": "https://github.com/koryschneider/aqi-notify",
   "author": "Kory Schneider",
   "license": "MIT",
   "private": true,
