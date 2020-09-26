@@ -4,7 +4,6 @@ require('dotenv').config();
 
 const nodemailer = require('nodemailer');
 const fetch = require('node-fetch');
-const moment = require('moment');
 const winston = require('winston');
 
 const {
@@ -74,7 +73,8 @@ async function main() {
   }
 
   // Build message
-  const time = moment(aqiData[0].HourObserved, 'HH').format('h:00 a');
+  const hour = aqiData[0].HourObserved + 1;
+  const time = hour > 12 ? `${hour - 12} pm` : `${hour} am`;
   const message = `The AQI is ${AQI} as of ${time}`;
 
   // Send message
