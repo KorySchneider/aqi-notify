@@ -44,12 +44,12 @@ const logger = createLogger({
     new transports.Console(),
     new transports.File({
       ...fileTransportOptions,
-      filename: 'error.log',
+      filename: 'logs/error.log',
       level: 'error',
     }),
     new transports.File({
       ...fileTransportOptions,
-      filename: 'combined.log',
+      filename: 'logs/combined.log',
     }),
   ],
 });
