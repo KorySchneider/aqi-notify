@@ -17,6 +17,7 @@ const {
   AIR_NOW_API_KEY,
   LOG_LEVEL,
   AQI_THRESHOLD,
+  AQI_OVERRIDE_THRESHOLD,
   MIN_HOUR,
   MAX_HOUR,
 } = process.env;
@@ -62,28 +63,31 @@ async function main() {
   const aqiData = await aqiResponse.json();
   logger.info(`Received AQI data response: ${JSON.stringify(aqiData)}`);
 
+  // Bail if API error
   if ('WebServiceError' in aqiData) {
     logger.error(`Exiting due to API error: ${JSON.stringify(aqiData)}`);
     process.exit(1);
   }
 
-  // Check AQI
+  // Relevant data
   const AQI = aqiData[0].AQI;
+  const hour = aqiData[0].HourObserved;
+
+  // Bail if AQI below threshold
   if (AQI < AQI_THRESHOLD) {
     logger.info('Exiting because AQI was below AQI_THRESHOLD');
     process.exit(0);
   }
 
-  // Check time
-  let hour = aqiData[0].HourObserved;
-  if (hour <= MIN_HOUR || hour >= MAX_HOUR) {
+  // Bail if not between set hours, and not overriding set hours
+  const override = AQI_OVERRIDE_THRESHOLD !== -1 && AQI >= AQI_OVERRIDE_THRESHOLD;
+  if ((hour < MIN_HOUR || hour > MAX_HOUR) && !override) {
     logger.info('Exiting because hour is outside desired range');
     process.exit(0);
   }
 
   // Build message
-  hour++;
-  const time = hour > 12 ? `${hour - 12} pm` : `${hour} am`;
+  const time = `${(hour + 11) % 12 + 1}:00 ${hour >= 12 ? 'pm' : 'am'}`;
   const message = `The AQI is ${AQI} as of ${time}`;
   logger.info(`Message to send: "${message}"`);
 

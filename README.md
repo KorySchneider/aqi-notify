@@ -6,7 +6,7 @@ airnow.gov, based on zip code, and send the AQI and time to an email address
 
 ### Requirements:
 - SMTP server to send mail from (a gmail account will work)
-- A server to run this program on
+- A server to run this program on (e.g. a Raspberry Pi or hosted VM)
   - with Node.js v12 or newer installed
 - (If you want SMS) your cell carrier's email-to-sms address
 
@@ -23,13 +23,18 @@ airnow.gov, based on zip code, and send the AQI and time to an email address
 
 ### Example `.env` file
 ```env
-# Send notification only if AQI is greater than or equal to this threshold
-AQI_THRESHOLD=50
-
 # Send notification only if the hour of reported data is within these times
 # Hours are 00-23, both settings are inclusive
 MIN_HOUR=6
 MAX_HOUR=20
+
+# Send notification only if AQI is greater than or equal to this threshold
+# and hour of reported data is between MIN_HOUR and MAX_HOUR
+AQI_THRESHOLD=50
+
+# Send notification if AQI is greater than or equal to this threshold, regardless of *_HOUR settings
+# Should be greater than AQI_THRESHOLD, or -1 to disable
+AQI_OVERRIDE_THRESHOLD=100
 
 # Location to check
 ZIP_CODE=12345
