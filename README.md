@@ -39,8 +39,8 @@ AQI_OVERRIDE_THRESHOLD=100
 # Location to check
 ZIP_CODE=12345
 
-# Address to send notification to
-SEND_ADDR=5551234567@text.your-carrier.com
+# Comma-delimited list of addresses to send notification to
+SEND_LIST=5551234567@text.some-carrier.com,5557654321@another-carrier.com
 
 # SMTP credentials & configuration
 SMTP_USER=username

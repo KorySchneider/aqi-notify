@@ -12,7 +12,7 @@ const {
   SMTP_HOST,
   SMTP_PORT,
   SMTP_SECURE,
-  SEND_ADDR,
+  SEND_LIST,
   ZIP_CODE,
   AIR_NOW_API_KEY,
   LOG_LEVEL,
@@ -101,12 +101,17 @@ async function main() {
       pass: SMTP_PASS,
     },
   });
-  const info = await transporter.sendMail({
-    from: SMTP_USER,
-    to: SEND_ADDR,
-    text: message,
-  });
-  logger.debug(`Message info: ${JSON.stringify(info)}`);
+  for (const address of SEND_LIST.split(',')) {
+    const addr = address.trim();
+    logger.info(`Sending to ${addr}`);
+    const info = await transporter.sendMail({
+      from: SMTP_USER,
+      to: addr,
+      text: message,
+    });
+    logger.debug(`Message info: ${JSON.stringify(info)}`);
+  }
+  logger.info('Done, all messages sent');
 }
 
 main().catch(err => logger.error(`Error in main(): ${err}`));
