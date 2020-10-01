@@ -107,6 +107,7 @@ async function main() {
     const info = await transporter.sendMail({
       from: SMTP_USER,
       to: addr,
+      subject: `AQI for ${ZIP_CODE}`,
       text: message,
     });
     logger.debug(`Message info: ${JSON.stringify(info)}`);
